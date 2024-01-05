@@ -121,8 +121,23 @@ function isIsoscelesTriangle(a, b, c) {
  *  10  => X
  *  26  => XXVI
  */
-function convertToRomanNumerals(/* num */) {
-  throw new Error('Not implemented');
+function convertToRomanNumerals(num) {
+  const romanSymbols = ['I', 'V', 'X', 'L', 'C', 'D', 'M'];
+  const romanValues = [1, 5, 10, 50, 100, 500, 1000];
+
+  let result = '';
+  let remaining = num;
+  for (let i = romanValues.length - 1; i >= 0; i -= 1) {
+    if (remaining >= romanValues[i]) {
+      const count = Math.floor(remaining / romanValues[i]);
+
+      result += romanSymbols[i].repeat(count);
+
+      remaining -= romanValues[i] * count;
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -140,8 +155,40 @@ function convertToRomanNumerals(/* num */) {
  *  '10,5'    => 'one zero point five'
  *  '1950.2'  => 'one nine five zero point two'
  */
-function convertNumberToString(/* numberStr */) {
-  throw new Error('Not implemented');
+function convertNumberToString(numberStr) {
+  const digitWords = {
+    0: 'zero',
+    1: 'one',
+    2: 'two',
+    3: 'three',
+    4: 'four',
+    5: 'five',
+    6: 'six',
+    7: 'seven',
+    8: 'eight',
+    9: 'nine',
+  };
+
+  const result = [];
+
+  for (let i = 0; i < numberStr.length; i += 1) {
+    const char = numberStr[i];
+
+    switch (char) {
+      case '-':
+        result.push('minus');
+        break;
+      case '.':
+      case ',':
+        result.push('point');
+        break;
+      default:
+        result.push(digitWords[char]);
+        break;
+    }
+  }
+
+  return result.join(' ');
 }
 
 /**
@@ -156,8 +203,17 @@ function convertNumberToString(/* numberStr */) {
  *  '0123210'   => true
  *  'qweqwe'    => false
  */
-function isPalindrome(/* str */) {
-  throw new Error('Not implemented');
+function isPalindrome(str) {
+  const { length } = str;
+  const mid = Math.floor(length / 2);
+
+  for (let i = 0; i < mid; i += 1) {
+    if (str[i] !== str[length - 1 - i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -174,8 +230,16 @@ function isPalindrome(/* str */) {
  *  'qwerty', 'Q'     => -1
  *  'qwerty', 'p'     => -1
  */
-function getIndexOf(/* str, letter */) {
-  throw new Error('Not implemented');
+function getIndexOf(str, letter) {
+  const { length } = str;
+
+  for (let i = 0; i < length; i += 1) {
+    if (str[i] === letter) {
+      return i;
+    }
+  }
+
+  return -1;
 }
 
 /**
@@ -193,8 +257,19 @@ function getIndexOf(/* str, letter */) {
  *  12345, 0    => false
  *  12345, 6    => false
  */
-function isContainNumber(/* num, digit */) {
-  throw new Error('Not implemented');
+function isContainNumber(num, digit) {
+  let remainingNum = Math.abs(num);
+
+  while (remainingNum > 0) {
+    const currentDigit = remainingNum % 10;
+    remainingNum = Math.floor(remainingNum / 10);
+
+    if (currentDigit === digit) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -210,8 +285,27 @@ function isContainNumber(/* num, digit */) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  const { length } = arr;
+
+  for (let i = 0; i < length; i += 1) {
+    let leftSum = 0;
+    let rightSum = 0;
+
+    for (let j = 0; j < i; j += 1) {
+      leftSum += arr[j];
+    }
+
+    for (let j = i + 1; j < length; j += 1) {
+      rightSum += arr[j];
+    }
+
+    if (leftSum === rightSum) {
+      return i;
+    }
+  }
+
+  return -1;
 }
 
 /**
@@ -235,8 +329,49 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+
+  for (let i = 0; i < size; i += 1) {
+    matrix.push([]);
+    for (let j = 0; j < size; j += 1) {
+      matrix[i].push(0);
+    }
+  }
+
+  let value = 1;
+  let minRow = 0;
+  let maxRow = size - 1;
+  let minCol = 0;
+  let maxCol = size - 1;
+
+  while (value <= size * size) {
+    for (let col = minCol; col <= maxCol; col += 1) {
+      matrix[minRow][col] = value;
+      value += 1;
+    }
+    minRow += 1;
+
+    for (let row = minRow; row <= maxRow; row += 1) {
+      matrix[row][maxCol] = value;
+      value += 1;
+    }
+    maxCol -= 1;
+
+    for (let col = maxCol; col >= minCol; col -= 1) {
+      matrix[maxRow][col] = value;
+      value += 1;
+    }
+    maxRow -= 1;
+
+    for (let row = maxRow; row >= minRow; row -= 1) {
+      matrix[row][minCol] = value;
+      value += 1;
+    }
+    minCol += 1;
+  }
+
+  return matrix;
 }
 
 /**
