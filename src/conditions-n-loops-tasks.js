@@ -156,39 +156,69 @@ function convertToRomanNumerals(num) {
  *  '1950.2'  => 'one nine five zero point two'
  */
 function convertNumberToString(numberStr) {
-  const digitWords = {
-    0: 'zero',
-    1: 'one',
-    2: 'two',
-    3: 'three',
-    4: 'four',
-    5: 'five',
-    6: 'six',
-    7: 'seven',
-    8: 'eight',
-    9: 'nine',
-  };
+  let result = '';
+  let hasDecimalPoint = false;
 
-  const result = [];
+  const modifiedNumberStr = numberStr.startsWith('-')
+    ? numberStr.slice(1)
+    : numberStr;
 
-  for (let i = 0; i < numberStr.length; i += 1) {
-    const char = numberStr[i];
+  for (let i = 0; i < modifiedNumberStr.length; i += 1) {
+    const char = modifiedNumberStr[i];
 
     switch (char) {
-      case '-':
-        result.push('minus');
+      case '0':
+        result += 'zero ';
+        break;
+      case '1':
+        result += 'one ';
+        break;
+      case '2':
+        result += 'two ';
+        break;
+      case '3':
+        result += 'three ';
+        break;
+      case '4':
+        result += 'four ';
+        break;
+      case '5':
+        result += 'five ';
+        break;
+      case '6':
+        result += 'six ';
+        break;
+      case '7':
+        result += 'seven ';
+        break;
+      case '8':
+        result += 'eight ';
+        break;
+      case '9':
+        result += 'nine ';
         break;
       case '.':
+        result += 'point';
+        hasDecimalPoint = true;
+        break;
       case ',':
-        result.push('point');
+        result += 'point';
+        hasDecimalPoint = true;
         break;
       default:
-        result.push(digitWords[char]);
-        break;
+        result += `${char}`;
     }
   }
 
-  return result.join(' ');
+  if (numberStr.startsWith('-')) {
+    result = `minus ${result}`;
+  }
+
+  if (hasDecimalPoint) {
+    result = result.replace('point', 'point ');
+  }
+
+  return result.trim();
 }
 
 /**
@@ -331,19 +361,15 @@ function getBalanceIndex(arr) {
  */
 function getSpiralMatrix(size) {
   const matrix = [];
-
-  for (let i = 0; i < size; i += 1) {
-    matrix.push([]);
-    for (let j = 0; j < size; j += 1) {
-      matrix[i].push(0);
-    }
-  }
-
   let value = 1;
   let minRow = 0;
   let maxRow = size - 1;
   let minCol = 0;
   let maxCol = size - 1;
+
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = [];
+  }
 
   while (value <= size * size) {
     for (let col = minCol; col <= maxCol; col += 1) {
@@ -389,8 +415,37 @@ function getSpiralMatrix(size) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const n = matrix.length;
+
+  const rotatedMatrix = [];
+  for (let i = 0; i < n; i += 1) {
+    rotatedMatrix.push([...matrix[i]]);
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = i + 1; j < n; j += 1) {
+      const temp = rotatedMatrix[i][j];
+      rotatedMatrix[i][j] = rotatedMatrix[j][i];
+      rotatedMatrix[j][i] = temp;
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    let start = 0;
+    let end = n - 1;
+
+    while (start < end) {
+      const temp = rotatedMatrix[i][start];
+      rotatedMatrix[i][start] = rotatedMatrix[i][end];
+      rotatedMatrix[i][end] = temp;
+
+      start += 1;
+      end -= 1;
+    }
+  }
+
+  return rotatedMatrix;
 }
 
 /**
